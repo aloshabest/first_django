@@ -15,24 +15,38 @@ class HomeNews(ListView):
         context['title'] = 'Главная страница'
         return context
 
-
     def get_queryset(self):
         return News.objects.filter(is_published=True)
 
 
-def index(request):
-    news = News.objects.all()
-    context = {
-        'news': news,
-        'title': 'Список новостей',
-    }
-    return render(request, template_name='news/index.html', context=context)
+class CategoryNews(ListView):
+    model = News
+    template_name = 'news/home_news_list.html'
+    context_object_name = 'news'
+    allow_empty = False
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = Category.objects.get(pk=self.kwargs['category_id'])
+        return context
+
+    def get_queryset(self):
+        return News.objects.filter(category_id=self.kwargs['category_id'], is_published=True)
 
 
-def get_category(request, category_id):
-    news = News.objects.filter(category_id=category_id)
-    category = Category.objects.get(pk=category_id)
-    return render(request, 'news/category.html', {'news': news, 'category': category})
+# def index(request):
+#     news = News.objects.all()
+#     context = {
+#         'news': news,
+#         'title': 'Список новостей',
+#     }
+#     return render(request, template_name='news/index.html', context=context)
+
+
+# def get_category(request, category_id):
+#     news = News.objects.filter(category_id=category_id)
+#     category = Category.objects.get(pk=category_id)
+#     return render(request, 'news/category.html', {'news': news, 'category': category})
 
 
 def view_news(request, news_id):
