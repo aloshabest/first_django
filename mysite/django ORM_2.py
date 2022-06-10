@@ -25,4 +25,9 @@
 # <News: Новость из админки>
 # >>> news.get_next_by_created_eqd()
 # <News: Form>
+# >>> News.objects.filter(category__title='Наука')
+# <QuerySet [<News: «Аэрофлот» прекратил продажу билетов на Шри-Ланку после ареста самолета>, <News: Form news 2>, <News: Form>, <News: Неопубликованная>, <News: Новость из админки>]>
+# >>> from django.db.models import Q
+# >>> News.objects.filter(Q(pk__in=[1, 2]) | Q(title__contains='1'))
+# <QuerySet [<News: Новость из админки>, <News: Новость 1>]>
 
